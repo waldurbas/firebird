@@ -21,7 +21,7 @@ Installation
    $ go get github.com/cznic/mathutil
    $ go get github.com/kardianos/osext
    $ go get github.com/shopspring/decimal
-   $ go get github.com/nakagami/firebirdsql
+   $ go get github.com/waldurbas/firebirdsql
    $ go get gitlab.com/nyarla/go-crypt
 
 

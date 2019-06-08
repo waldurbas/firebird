@@ -69,7 +69,7 @@ General
 - dbalias: alias name).
 
 
-   Optional
+Optional
 =========
 
 param1, param2... are

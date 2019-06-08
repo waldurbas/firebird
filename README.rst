@@ -35,7 +35,7 @@ Example
    import (
        "fmt"
        "database/sql"
-       _ "github.com/nakagami/firebirdsql"
+       _ "github.com/waldurbas/firebirdsql"
    )
 
    func main() {

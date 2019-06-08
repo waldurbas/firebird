@@ -10,8 +10,8 @@ Firebird RDBMS http://firebirdsql.org SQL driver for Go
 Requirements
 -------------
 
-* Firebird 2.1 or higher
-* Golang 1.7 or higher
+* Firebird 2.58 or higher
+* Golang 1.12 or higher
 
 Installation
 -------------
@@ -23,6 +23,7 @@ Installation
    $ go get github.com/shopspring/decimal
    $ go get github.com/waldurbas/firebirdsql
    $ go get gitlab.com/nyarla/go-crypt
+   $ go get github.com/jmoiron/sqlx
 
 
 Example
@@ -34,40 +35,41 @@ Example
 
    import (
        "fmt"
-       "database/sql"
+
        _ "github.com/waldurbas/firebirdsql"
+  	   "github.com/jmoiron/sqlx"
    )
 
    func main() {
        var n int
-       conn, _ := sql.Open("firebirdsql", "user:password@servername/foo/bar.fdb")
-       defer conn.Close()
-       conn.QueryRow("SELECT Count(*) FROM rdb$relations").Scan(&n)
-       fmt.Println("Relations count=", n)
+       db, err := sqlx.Connect("firebirdsql", "user:password@server/3051:db.fdb")
+   	   if err != nil {
+            panic(err.Error())
+       }
 
+       defer db.Close()
+       db.QueryRow("select count(*) from rdb$relations").Scan(&n)
+       fmt.Println("Relations.Count=", n)
    }
 
-
-See also driver_test.go
 
 Connection string
 --------------------------
 
-::
-
-   user:password@servername[:port_number]/database_name_or_file[?params1=value1[&param2=value2]...]
+   user:pass@server/port_number:dbalias
 
 
 General
 =========
 
 - user: login user
-- password: login password
-- servername: Firebird server's host name or IP address.
-- port_number: Port number. default value is 3050.
-- database_name_or_file: Database path (or alias name).
+- pass: login password
+- server: Firebird server's host name or IP address.
+- portNumber: Port number. default value is 3051.
+- dbalias: alias name).
 
-Optional
+
+   Optional
 =========
 
 param1, param2... are
@@ -80,3 +82,4 @@ param1, param2... are
    role,Role name,
    tzname, Time Zone name, For Firebird 4.0+
    wire_crypt,Enable wire data encryption or not.,true,For Firebird 3.0+
+

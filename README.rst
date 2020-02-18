@@ -23,8 +23,7 @@ Installation
    $ go get github.com/shopspring/decimal
    $ go get github.com/waldurbas/firebirdsql
    $ go get gitlab.com/nyarla/go-crypt
-   $ go get github.com/jmoiron/sqlx
-
+   
 
 Example
 -------------
@@ -37,12 +36,12 @@ Example
        "fmt"
 
        _ "github.com/waldurbas/firebirdsql"
-  	   "github.com/jmoiron/sqlx"
+  	   "github.com/sql"
    )
 
    func main() {
        var n int
-       db, err := sqlx.Connect("firebirdsql", "user:password@server/3051:db.fdb")
+       db, err := sql.Connect("firebirdsql", "user:password@server:3051/db.fdb")
    	   if err != nil {
             panic(err.Error())
        }
@@ -56,7 +55,7 @@ Example
 Connection string
 --------------------------
 
-   user:pass@server/port_number:dbalias
+   user:pass@server:port_number/dbalias
 
 
 General
@@ -67,19 +66,3 @@ General
 - server: Firebird server's host name or IP address.
 - portNumber: Port number. default value is 3051.
 - dbalias: alias name).
-
-
-Optional
-=========
-
-param1, param2... are
-
-.. csv-table::
-   :header: Name,Description,Default,Note
-
-   auth_plugin_name,Authentication plugin name.,Srp,Srp256/Srp/Legacy_Auth are available.
-   column_name_to_lower,Force column name to lower,false,For "github.com/jmoiron/sqlx"
-   role,Role name,
-   tzname, Time Zone name, For Firebird 4.0+
-   wire_crypt,Enable wire data encryption or not.,true,For Firebird 3.0+
-

@@ -19,17 +19,22 @@ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*******************************************************************************/
+********************************************************************************/
+
+//------------------------------------------------------------------------------
+// 2020.02.18 @Wald.Urbas for VARYING and TEXT sqlLen/4
+//------------------------------------------------------------------------------
 
 package firebirdsql
 
 import (
 	"bytes"
 	"encoding/binary"
-	"github.com/shopspring/decimal"
 	"math"
 	"reflect"
 	"time"
+
+	"github.com/shopspring/decimal"
 )
 
 const (
@@ -58,6 +63,7 @@ const (
 )
 
 var xsqlvarTypeLength = map[int]int{
+	SQL_TYPE_TEXT:         -1,
 	SQL_TYPE_VARYING:      -1,
 	SQL_TYPE_SHORT:        4,
 	SQL_TYPE_LONG:         4,
@@ -80,6 +86,7 @@ var xsqlvarTypeLength = map[int]int{
 }
 
 var xsqlvarTypeDisplayLength = map[int]int{
+	SQL_TYPE_TEXT:         -1,
 	SQL_TYPE_VARYING:      -1,
 	SQL_TYPE_SHORT:        6,
 	SQL_TYPE_LONG:         11,
@@ -103,6 +110,7 @@ var xsqlvarTypeDisplayLength = map[int]int{
 }
 
 var xsqlvarTypeName = map[int]string{
+	SQL_TYPE_TEXT:         "TEXT",
 	SQL_TYPE_VARYING:      "VARYING",
 	SQL_TYPE_SHORT:        "SHORT",
 	SQL_TYPE_LONG:         "LONG",
@@ -140,16 +148,18 @@ type xSQLVAR struct {
 func (x *xSQLVAR) ioLength() int {
 	if x.sqltype == SQL_TYPE_TEXT {
 		return x.sqllen
-	} else {
-		return xsqlvarTypeLength[x.sqltype]
 	}
+
+	return xsqlvarTypeLength[x.sqltype]
 }
 
 func (x *xSQLVAR) displayLength() int {
-	if x.sqltype == SQL_TYPE_TEXT {
-		return x.sqllen
-	} else {
-		return xsqlvarTypeDisplayLength[x.sqltype]
+	switch x.sqltype {
+	// 2020.02.18 @Wald.Urbas for VARYING and TEXT sqlLen/4
+	case SQL_TYPE_TEXT, SQL_TYPE_VARYING:
+		return x.sqllen / 4
+	default:
+		return xsqlvarTypeLength[x.sqltype]
 	}
 }
 

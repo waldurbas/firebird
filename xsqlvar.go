@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ********************************************************************************/
 
 //------------------------------------------------------------------------------
-// 2020.02.18 @Wald.Urbas for VARYING and TEXT sqlLen/4
+// 2020.02.18 @Wald.Urbas for VARYING and TEXT (sqlLen shl 2)
 //------------------------------------------------------------------------------
 
 package firebirdsql
@@ -155,9 +155,9 @@ func (x *xSQLVAR) ioLength() int {
 
 func (x *xSQLVAR) displayLength() int {
 	switch x.sqltype {
-	// 2020.02.18 @Wald.Urbas for VARYING and TEXT sqlLen/4
+	// 2020.02.18 @Wald.Urbas for VARYING and TEXT (sqlLen shl 2)
 	case SQL_TYPE_TEXT, SQL_TYPE_VARYING:
-		return x.sqllen / 4
+		return x.sqllen shl 2
 	default:
 		return xsqlvarTypeLength[x.sqltype]
 	}

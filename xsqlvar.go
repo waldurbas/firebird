@@ -157,7 +157,7 @@ func (x *xSQLVAR) displayLength() int {
 	switch x.sqltype {
 	// 2020.02.18 @Wald.Urbas for VARYING and TEXT (sqlLen shl 2)
 	case SQL_TYPE_TEXT, SQL_TYPE_VARYING:
-		return x.sqllen shl 2
+		return x.sqllen >> 2
 	default:
 		return xsqlvarTypeLength[x.sqltype]
 	}
